@@ -1,6 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:todo/colors.dart';
+import 'package:todo/model/todo_types.dart';
+import 'package:todo/views/widgets/todo_sliver.dart';
+
+List<Todo> todoList = [
+  Todo(
+    isChecked: false,
+    dateCreated: DateTime(2023, 3, 29),
+    title: 'Zrobić zakupy',
+    todoId: '861239',
+    dateDue: DateTime(2023, 3, 31),
+    desc: 'Wejdz do lidla',
+  ),
+  Todo(
+    isChecked: true,
+    dateCreated: DateTime(2023, 3, 29),
+    title: 'Zabrać bombelka z przedszkola',
+    todoId: '861239',
+    dateDue: DateTime(2023, 3, 31),
+    desc: 'Przedszkole nr. 20',
+  ),
+  Todo(
+    isChecked: false,
+    dateCreated: DateTime(2023, 3, 29),
+    title: 'Zejbać ci kopa',
+    todoId: '861239',
+    dateDue: DateTime(2023, 3, 31),
+  ),
+];
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
@@ -36,11 +64,17 @@ class HomeView extends StatelessWidget {
       body: SafeArea(
         bottom: true,
         top: true,
-        child: ListView.builder(
-          itemCount: 5,
-          itemBuilder: ((context, index) {
-            return const Text('a');
-          }),
+        child: CustomScrollView(
+          slivers: [
+            SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  return TodoSliver(todo: todoList[index]);
+                },
+                childCount: todoList.length,
+              ),
+            ),
+          ],
         ),
       ),
     );

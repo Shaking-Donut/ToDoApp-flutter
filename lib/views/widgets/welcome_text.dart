@@ -19,7 +19,7 @@ class WelcomeText extends StatelessWidget {
                 style: TextStyle(fontWeight: FontWeight.w300, fontSize: 24),
               ),
               Text(
-                'NatCar',
+                'ToDo',
                 style: TextStyle(fontWeight: FontWeight.w500, fontSize: 36),
               ),
             ],
