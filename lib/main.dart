@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:todo/colors.dart';
+import 'package:todo/model/state_model.dart';
 import 'package:todo/views/home_view.dart';
 import 'package:todo/views/login_view.dart';
 import 'package:todo/views/register_view.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(ChangeNotifierProvider(
+    create: ((context) => TodoModel()),
+    child: const MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
