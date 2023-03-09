@@ -55,6 +55,9 @@ class _TodoSliverState extends State<TodoSliver> {
               borderRadius: const BorderRadius.all(
                 Radius.circular(5.0),
               ),
+              color: widget.todo.isChecked
+                  ? AppColors.background2
+                  : AppColors.background1,
             ),
             child: Padding(
               padding: const EdgeInsets.all(8.0),

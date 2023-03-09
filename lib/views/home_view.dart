@@ -2,12 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:todo/colors.dart';
-import 'package:todo/model/state_model.dart';
+import 'package:todo/provider/todo_provider.dart';
 import 'package:todo/model/todo_types.dart';
+import 'package:todo/views/todo_add_screen.dart';
 import 'package:todo/views/widgets/todo_sliver.dart';
 
-class HomeView extends StatelessWidget {
+class HomeView extends StatefulWidget {
   const HomeView({super.key});
+
+  @override
+  State<HomeView> createState() => _HomeViewState();
+}
+
+class _HomeViewState extends State<HomeView> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      Provider.of<TodoProvider>(context, listen: false).getAllTodos();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,27 +51,121 @@ class HomeView extends StatelessWidget {
         backgroundColor: AppColors.transparent,
         elevation: 0,
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: const Icon(Icons.add),
+      floatingActionButton: Consumer<TodoProvider>(
+        builder: (context, todo, child) {
+          return FloatingActionButton(
+            onPressed: () {
+              showModalBottomSheet(
+                isScrollControlled: true,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(16),
+                    topRight: Radius.circular(16),
+                  ),
+                ),
+                context: context,
+                builder: ((context) => TodoAddScreen(
+                      callback: (Todo newTodo) {
+                        todo.add(newTodo);
+                      },
+                    )),
+              );
+            },
+            child: const Icon(Icons.add),
+          );
+        },
       ),
       body: SafeArea(
         bottom: true,
         top: true,
-        child: Consumer<TodoModel>(builder: (context, todo, child) {
+        child: Consumer<TodoProvider>(builder: (context, todo, child) {
           return CustomScrollView(
             slivers: [
+              const SliverToBoxAdapter(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                  child: Text(
+                    'Do zrobienia',
+                    style: TextStyle(
+                      fontSize: 18,
+                    ),
+                  ),
+                ),
+              ),
+              if (todo.isLoading)
+                SliverToBoxAdapter(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      CircularProgressIndicator(),
+                    ],
+                  ),
+                ),
               SliverList(
                 delegate: SliverChildBuilderDelegate(
                   (context, index) {
-                    return TodoSliver(
-                      todo: todo.todos[index],
-                      callback: (Todo newTodo) {
-                        todo.update(newTodo);
+                    final task = todo.todosNotComplete[index];
+
+                    return Dismissible(
+                      key: Key(task.todoId),
+                      onDismissed: (direction) {
+                        todo.remove(task);
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Usunięto ${task.title}'),
+                          ),
+                        );
                       },
+                      background: Container(color: Colors.red),
+                      child: TodoSliver(
+                        todo: task,
+                        callback: (Todo newTodo) {
+                          todo.update(newTodo);
+                        },
+                      ),
                     );
                   },
-                  childCount: todo.todos.length,
+                  childCount: todo.todosNotComplete.length,
+                ),
+              ),
+              const SliverToBoxAdapter(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                  child: Text(
+                    'Zrobione',
+                    style: TextStyle(
+                      fontSize: 18,
+                    ),
+                  ),
+                ),
+              ),
+              SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                    final task = todo.todosComplete[index];
+
+                    return Dismissible(
+                      key: Key(task.todoId),
+                      onDismissed: (direction) {
+                        todo.remove(task);
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Usunięto ${task.title}'),
+                          ),
+                        );
+                      },
+                      background: Container(color: Colors.red),
+                      child: TodoSliver(
+                        todo: task,
+                        callback: (Todo newTodo) {
+                          todo.update(newTodo);
+                        },
+                      ),
+                    );
+                  },
+                  childCount: todo.todosComplete.length,
                 ),
               ),
             ],

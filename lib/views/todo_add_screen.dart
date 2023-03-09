@@ -1,35 +1,25 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:todo/colors.dart';
 import 'package:todo/model/todo_types.dart';
 
-class TodoScreen extends StatefulWidget {
-  const TodoScreen({super.key, required this.todo, required this.callback});
+class TodoAddScreen extends StatefulWidget {
+  const TodoAddScreen({super.key, required this.callback});
 
-  final Todo todo;
   final Function(Todo newTodo) callback;
 
   @override
-  State<TodoScreen> createState() => _TodoScreenState();
+  State<TodoAddScreen> createState() => _TodoAddScreenState();
 }
 
-class _TodoScreenState extends State<TodoScreen> {
+class _TodoAddScreenState extends State<TodoAddScreen> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descController = TextEditingController();
   final TextEditingController _dateDueController = TextEditingController();
+  final String _todoId = Random.secure().toString();
   DateTime? _dateDue;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _titleController.text = widget.todo.title;
-    _descController.text = widget.todo.desc;
-    _dateDue = widget.todo.dateDue;
-    if (_dateDue != null) {
-      _dateDueController.text = DateFormat('dd-MM-yyyy').format(_dateDue!);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +32,7 @@ class _TodoScreenState extends State<TodoScreen> {
           const Padding(
             padding: EdgeInsets.symmetric(vertical: 16),
             child: Text(
-              'Szczegóły',
+              'Utwórz nowe przypomnienie',
               style: TextStyle(
                 fontWeight: FontWeight.w400,
                 fontSize: 28,
@@ -116,16 +106,16 @@ class _TodoScreenState extends State<TodoScreen> {
               ElevatedButton(
                 onPressed: () {
                   widget.callback(Todo(
-                    isChecked: widget.todo.isChecked,
-                    dateCreated: widget.todo.dateCreated,
-                    todoId: widget.todo.todoId,
+                    isChecked: false,
+                    dateCreated: DateTime.now(),
+                    todoId: _todoId,
                     title: _titleController.text,
                     desc: _descController.text,
                     dateDue: _dateDue,
                   ));
                   Navigator.pop(context);
                 },
-                child: const Text('Zatwierdź zmiany'),
+                child: const Text('Utwórz'),
               ),
             ],
           ),

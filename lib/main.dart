@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo/colors.dart';
-import 'package:todo/model/state_model.dart';
+import 'package:todo/provider/todo_provider.dart';
 import 'package:todo/views/home_view.dart';
 import 'package:todo/views/login_view.dart';
 import 'package:todo/views/register_view.dart';
 
 void main() {
   runApp(ChangeNotifierProvider(
-    create: ((context) => TodoModel()),
+    create: ((context) => TodoProvider()),
     child: const MyApp(),
   ));
 }
