@@ -43,9 +43,8 @@ class _HomeViewState extends State<HomeView> {
         title: const Text.rich(
           TextSpan(children: [
             TextSpan(text: 'Cześć, '),
-            // TODO: username
             TextSpan(
-                text: 'Tanya!', style: TextStyle(fontWeight: FontWeight.w500)),
+                text: 'Kacper!', style: TextStyle(fontWeight: FontWeight.w500)),
           ]),
         ),
         backgroundColor: AppColors.transparent,

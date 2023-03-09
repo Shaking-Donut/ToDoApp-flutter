@@ -23,7 +23,7 @@ class TodoService {
           dateCreated: DateTime.parse(e['dateCreated']),
           title: e['title'],
           todoId: e['_id'],
-          dateDue: e['dateDue'],
+          dateDue: e['dateDue'] != null ? DateTime.parse(e['dateDue']) : null,
           desc: e['description'],
         );
       }).toList();

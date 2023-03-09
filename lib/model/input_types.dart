@@ -17,11 +17,11 @@ class InputTypes {
     obscureText: true,
   );
   static final email = InputType(
-    labelText: 'Email',
-    hintText: 'Podaj swój adres email',
+    labelText: 'Login',
+    hintText: 'Podaj swój login',
   );
   static final fullName = InputType(
     labelText: 'Imię',
-    hintText: 'Podaj swoje pełne imię',
+    hintText: 'Podaj swoje imię',
   );
 }

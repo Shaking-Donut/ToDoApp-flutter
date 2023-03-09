@@ -93,7 +93,7 @@ class RegisterForm extends StatelessWidget {
               minimumSize: const Size(double.infinity, 60),
             ),
             onPressed: () {
-              // TODO: Login function
+              Navigator.pushNamed(context, '/login');
             },
             child: const Text(
               'Zarejestruj się',
